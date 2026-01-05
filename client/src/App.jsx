@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // 🌍 Translations Dictionary
 const translations = {

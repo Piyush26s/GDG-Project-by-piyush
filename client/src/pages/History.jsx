@@ -6,8 +6,24 @@ export default function History({ t }) {
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
-        const saved = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-        setHistory(saved.reverse()); // Show newest first
+        try {
+            const raw = localStorage.getItem("searchHistory");
+            if (!raw) {
+                setHistory([]);
+                return;
+            }
+            const saved = JSON.parse(raw);
+            if (Array.isArray(saved)) {
+                setHistory(saved.reverse()); // Show newest first
+            } else {
+                console.warn("History was not an array, resetting.");
+                setHistory([]);
+                localStorage.removeItem("searchHistory");
+            }
+        } catch (e) {
+            console.error("Failed to load history:", e);
+            setHistory([]);
+        }
     }, []);
 
     const deleteItem = (indexToDelete) => {
