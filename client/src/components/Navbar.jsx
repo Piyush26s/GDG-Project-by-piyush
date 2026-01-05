@@ -4,12 +4,6 @@ import { motion } from "framer-motion";
 export default function Navbar({ lang, setLang, t }) {
     const location = useLocation();
 
-    const links = [
-        { path: "/", label: "Home" }, // Helper label, actual text from props if needed or hardcoded
-        { path: "/dashboard", label: "Dashboard" },
-        { path: "/history", label: "History" },
-    ];
-
     return (
         <motion.nav
             initial={{ y: -50, opacity: 0 }}
@@ -17,22 +11,49 @@ export default function Navbar({ lang, setLang, t }) {
             className="topbar"
         >
             <div className="logo">
-                <Link to="/" style={{ textDecoration: 'none' }}>
+                <Link to="/">
                     <h1>{t.title}</h1>
                 </Link>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                <div className="nav-links" style={{ display: 'flex', gap: '1.5rem' }}>
-                    <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}>
-                        {lang === 'hi' ? 'घर' : 'Home'}
-                    </Link>
-                    <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}>
-                        {lang === 'hi' ? 'डैशबोर्ड' : 'Dashboard'}
-                    </Link>
-                    <Link to="/history" className={`nav-link ${location.pathname === '/history' ? 'active' : ''}`} style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}>
-                        {lang === 'hi' ? 'इतिहास' : 'History'}
-                    </Link>
+                <div className="nav-links" style={{ display: 'flex', gap: '2rem', position: 'relative' }}>
+                    {[
+                        { path: "/", label: lang === 'hi' ? 'घर' : 'Home' },
+                        { path: "/dashboard", label: lang === 'hi' ? 'डैशबोर्ड' : 'Dashboard' },
+                        { path: "/history", label: lang === 'hi' ? 'इतिहास' : 'History' }
+                    ].map((link) => (
+                        <Link
+                            key={link.path}
+                            to={link.path}
+                            style={{
+                                color: location.pathname === link.path ? 'var(--primary)' : 'var(--text-muted)',
+                                textDecoration: 'none',
+                                fontWeight: location.pathname === link.path ? 700 : 500,
+                                position: 'relative',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                transition: 'color 0.3s'
+                            }}
+                        >
+                            {link.label}
+                            {location.pathname === link.path && (
+                                <motion.div
+                                    layoutId="underline"
+                                    style={{
+                                        width: '100%',
+                                        height: '3px',
+                                        background: 'var(--primary)',
+                                        borderRadius: '10px',
+                                        position: 'absolute',
+                                        bottom: '-5px',
+                                        boxShadow: '0 0 10px var(--primary)'
+                                    }}
+                                />
+                            )}
+                        </Link>
+                    ))}
                 </div>
 
                 <select

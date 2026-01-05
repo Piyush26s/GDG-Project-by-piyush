@@ -10,9 +10,17 @@ export default function History({ t }) {
         setHistory(saved.reverse()); // Show newest first
     }, []);
 
-    const clearHistory = () => {
-        localStorage.removeItem("searchHistory");
-        setHistory([]);
+    const deleteItem = (indexToDelete) => {
+        const updatedHistory = history.filter((_, index) => index !== indexToDelete);
+        setHistory(updatedHistory);
+        localStorage.setItem("searchHistory", JSON.stringify(updatedHistory.reverse())); // Update local storage (reverse back to store correctly)
+        // Note: The above logic has a small bug: 'history' state is already reversed for display.
+        // If we filter the 'history' state, we have the new display order.
+        // We should store it in the original order (oldest first) or just store what we have if we want to change storage strategy.
+        // Simpler fix: Just store the filtered list. The useEffect reverses on load, so we should store it "un-reversed" if we want to maintain that consistency, 
+        // OR just decide that localStorage stores straightforwardly.
+        // Let's stick to the current pattern: Load -> Reverse. So Store -> Un-reverse.
+        localStorage.setItem("searchHistory", JSON.stringify([...updatedHistory].reverse()));
     };
 
     return (
@@ -52,10 +60,32 @@ export default function History({ t }) {
                                 background: 'rgba(0,0,0,0.3)',
                                 border: '1px solid var(--glass-border)',
                                 borderRadius: '16px',
-                                padding: '1.5rem'
+                                padding: '1.5rem',
+                                position: 'relative' // For absolute positioning of delete button
                             }}
                         >
-                            <div style={{ marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
+                            <button
+                                onClick={() => deleteItem(index)}
+                                title="Delete this item"
+                                style={{
+                                    position: 'absolute',
+                                    top: '1rem',
+                                    right: '1rem',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#ef4444', // Red color
+                                    fontSize: '1.2rem',
+                                    cursor: 'pointer',
+                                    opacity: 0.7,
+                                    transition: 'opacity 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.target.style.opacity = '1'}
+                                onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+                            >
+                                🗑️
+                            </button>
+
+                            <div style={{ marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', paddingRight: '2rem' }}>
                                 <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{item.date}</span>
                                 <span style={{ background: 'var(--glass-highlight)', padding: '0.2rem 0.8rem', borderRadius: '12px', fontSize: '0.8rem' }}>{item.profile}</span>
                             </div>
