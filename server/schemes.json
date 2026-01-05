@@ -1,0 +1,20 @@
+[
+  {
+    "name": "PM Awas Yojana",
+    "minAge": 18,
+    "maxIncome": 600000,
+    "category": ["Any"],
+    "states": ["All"],
+    "documents": ["Aadhaar Card", "Income Certificate"],
+    "link": "https://pmaymis.gov.in"
+  },
+  {
+    "name": "Post Matric Scholarship",
+    "minAge": 18,
+    "maxIncome": 250000,
+    "category": ["Student"],
+    "states": ["MP"],
+    "documents": ["Aadhaar Card", "Income Certificate", "College ID"],
+    "link": "https://scholarships.gov.in"
+  }
+]
