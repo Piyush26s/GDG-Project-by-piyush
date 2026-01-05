@@ -83,7 +83,19 @@ body {
   /* Enable vertical scrolling */
 }
 
-/* ... existing keyframes ... */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
 .app-container {
   display: flex;
@@ -95,7 +107,44 @@ body {
   position: relative;
 }
 
-/* ... existing topbar ... */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo a {
+  text-decoration: none;
+}
+
+.logo h1 {
+  font-size: 2.5rem;
+  /* Bigger as requested */
+  font-weight: 900;
+  /* Animated Vomlaga (Shine) Effect */
+  background: linear-gradient(to right, var(--primary), #fff, var(--secondary));
+  background-size: 200% auto;
+  animation: shine 4s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Drop shadow to prevent mixing with background */
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.8));
+  letter-spacing: -0.5px;
+  padding: 0.5rem 0;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
 
 /* Main Content (Dashboard) */
 .main-content {
