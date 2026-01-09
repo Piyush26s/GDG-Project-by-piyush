@@ -15,6 +15,9 @@ I've built **AI Sarkar Sahayak**, a conversational AI web app designed to help c
 - **Backend**: Node.js + Express
 - **Design**: CSS (Custom styling)
 
+**💻 Skills Demonstrated:**
+React.js • Node.js • Express • HTML5/CSS3 • REST APIs • Git/GitHub • Responsive Design • Problem Solving
+
 This project was built as an MVP for a Hackathon to solve the problem of information accessibility.
 
 Check out the code on GitHub: [Link to your repo]
