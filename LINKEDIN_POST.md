@@ -20,6 +20,16 @@ React.js • Node.js • Express • HTML5/CSS3 • REST APIs • Git/GitHub •
 
 This project was built as an MVP for a Hackathon to solve the problem of information accessibility.
 
+---
+
+**🤖 Bonus Update: Added ThinkBot - Premium AI Chatbot!**
+I've also included **ThinkBot**, a modern, aesthetically premium AI chatbot in the repository.
+**✨ Highlights:**
+- **Glassmorphism UI**: Beautiful, transparent design with deep gradients.
+- **Gemini Powered**: Integrated with Google's Gemini API for smart responses.
+- **Rich Markdown**: Supports bold, italic, and code syntax highlighting.
+- **Privacy Focused**: Your API key stays in your browser.
+
 Check out the code on GitHub: [Link to your repo]
 Live Demo: [Link to your live demo]
 
