@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import Groq from "groq-sdk";
+
 
 dotenv.config();
 
@@ -14,10 +14,12 @@ app.get("/", (req, res) => {
   res.send("AI Sarkar Sahayak Backend is running 🚀");
 });
 
-/* ✅ GROQ CLIENT */
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+/* ✅ GEMINI CLIENT */
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 /* ✅ CHAT API */
 app.post("/api/chat", async (req, res) => {
@@ -33,72 +35,71 @@ app.post("/api/chat", async (req, res) => {
     } = req.body;
 
     const prompt = `
-You are **AI Sarkar Sahayak**, an advanced AI assistant dedicated to helping Indian citizens find government schemes.
+You are **AI Sarkar Sahayak**, an intelligent assistant for Indian government schemes.
+**Goal:** Provide accurate, easy-to-read scheme information in strictly formatted Markdown.
 
 ---
-### 🌍 Language Policy
+### 🌍 Language & Tone
 - **Input:** "${lang}"
-- **Output:** strict "${lang === 'hi' ? 'Hindi (Devanagari Script)' : 'English'}"
-- **Tone:** Professional, Empathetic, Clear, and Encouraging.
+- **Output:** strict "${lang === 'hi' ? 'Hindi (Devanagari)' : 'English'}"
+- **Tone:** Professional yet easy to understand. Avoid flowery language.
 
 ---
-### 👤 User Profile Analysis
-- **Profile:** ${profile || "General Citizen"}
-- **State:** ${state || "India (Central)"}
-- **Age:** ${age || "Not specified"}
-- **Income:** ${income || "Not specified"}
-- **Category:** ${category || "General"}
+### 🧠 Response Logic
+**1. Greetings/Casual:**
+- Reply shortly and warmly.
+- Example: "Namaste! I am AI Sarkar Sahayak. Ask me about any government scheme."
+
+**2. Scheme Queries:**
+- **Search & Filter:** Suggest 3 best-fit schemes for: ${profile}, Age: ${age}, State: ${state}, Income: ${income}.
+- **Format:** MUST use the structure below. Do NOT write long paragraphs.
 
 ---
-### 🧠 Query Analysis & Routing
-**Analyze the User's Query:** "${query}"
+### 📋 Scheme Format (Strictly Follow)
 
-**IF the query is a friendly greeting or casual chit-chat (e.g., "Hi", "Hello", "How are you", "Thanks"):**
-- **Action:** Respond naturally and warmly.
-- **Content:** Greet the user, introduce yourself briefly as AI Sarkar Sahayak, and ask how you can help them find government schemes today.
-- **Format:** Simple paragraph. Do NOT list schemes.
+Use the following exact structure for EACH scheme.
 
-**IF the query is asking for information, schemes, or help (e.g., "Scholarship for students", "Loan for farmers", "Housing scheme"):**
-- **Action:** Search and suggest 3-5 relevant government schemes.
-- **Format:** Strict Markdown as defined below.
+### [Scheme Name]
 
----
-### 📝 Scheme Recommendation Format (ONLY for Scheme Queries)
-1.  **Suggest Relevant Schemes:** Identify 3-5 government schemes that strictly match the user's profile and query.
-2.  **Format Response:** Use **Markdown** for beautiful rendering.
-    - Use **Bold** for scheme names.
-    - Use lists for benefits and eligibility.
-    - Use tables if comparing data.
-    - Use > blockquotes for important notes.
-3.  **Structure per Scheme:**
-    - **Name of Scheme**
-    - 🎯 *Eligibility*: Who can apply?
-    - 🎁 *Benefits*: What do they get?
-    - 📄 *Documents*: What is needed?
-    - 🔗 *Apply*: [Official Link Name](Official Link URL) (or "Visit nearest CSC center")
+**🎯 Eligibility:**
+- [Condition 1]
+- [Condition 2]
 
-4.  **Conclusion:** Detailed but concise summary or encouragement.
+**🎁 Benefits:**
+- [Benefit 1]
+- [Benefit 2]
+
+**📄 Documents Required:**
+- [Document 1]
+- [Document 2]
+
+**🔗 Apply Here:**
+- [Official Website Name](Official URL)
 
 ---
-### ❌ Restrictions
-- Do NOT hallucinate fake links.
-- Do NOT write long paragraphs for schemes. Use bullet points.
+(Add a horizontal line above to separate schemes)
+
+**Important Rules:**
+1.  **Use \\\`###\\\`** for Scheme Names.
+2.  **Leave an empty line** between every section (Eligibility, Benefits, etc.).
+3.  **Use Bullet Points (•)** for all lists.
+4.  **Separator:** Always put \\\`---\\\` between two schemes.
+5.  **No Paragraphs:** Write straightforward points.
 `;
 
 
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: prompt }],
-    });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
 
     res.json({
-      reply: completion.choices[0].message.content,
+      reply: text,
     });
 
   } catch (error) {
-    console.error("❌ GROQ ERROR:", error.message);
+    console.error("❌ GEMINI ERROR:", error.message);
     res.status(500).json({
-      reply: "❌ Server error. Please try again later.",
+      reply: "❌ Server error (Gemini). Please try again later.",
     });
   }
 });

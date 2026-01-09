@@ -7,10 +7,10 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.22.1",
-    "groq-sdk": "^0.7.0",
     "node-fetch": "^3.3.2"
   }
 }
