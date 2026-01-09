@@ -63,7 +63,7 @@ const translations = {
       educationLevel: "Current Education Level",
     },
     categories: ["Education", "Agriculture", "Housing", "Health", "Employment", "Pension"],
-    aiQuery: "Suggest the best government schemes based on my profile"
+    aiQuery: "I have filled my details. Please confirm you received them and ask me what specific benefit I am looking for in this category. Do not list schemes yet."
   },
   hi: {
     title: "एआई सरकार सहायक",
@@ -118,7 +118,7 @@ const translations = {
       educationLevel: "वर्तमान शिक्षा स्तर",
     },
     categories: ["शिक्षा", "कृषि", "आवास", "स्वास्थ्य", "रोजगार", "पेंशन"],
-    aiQuery: "मेरे प्रोफ़ाइल के हिसाब से सबसे अच्छी सरकारी योजनाएं बताएं"
+    aiQuery: "मैंने अपनी जानकारी भर दी है। कृपया पुष्टि करें और मुझसे पूछें कि मुझे इस श्रेणी में विशेष रूप से क्या चाहिए। अभी योजनाएं न दिखाएं।"
   }
 };
 

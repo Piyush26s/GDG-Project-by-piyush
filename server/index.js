@@ -15,11 +15,10 @@ app.get("/", (req, res) => {
 });
 
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-/* ✅ GEMINI CLIENT */
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+/* ✅ GROQ CLIENT */
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 /* ✅ CHAT API */
 app.post("/api/chat", async (req, res) => {
@@ -51,7 +50,7 @@ You are **AI Sarkar Sahayak**, an intelligent assistant for Indian government sc
 - Example: "Namaste! I am AI Sarkar Sahayak. Ask me about any government scheme."
 
 **2. Scheme Queries:**
-- **Search & Filter:** Suggest 3 best-fit schemes for: ${profile}, Age: ${age}, State: ${state}, Income: ${income}.
+- **Search & Filter:** Suggest 3 best-fit schemes based on the User Request below.
 - **Format:** MUST use the structure below. Do NOT write long paragraphs.
 
 ---
@@ -85,21 +84,28 @@ Use the following exact structure for EACH scheme.
 3.  **Use Bullet Points (•)** for all lists.
 4.  **Separator:** Always put \\\`---\\\` between two schemes.
 5.  **No Paragraphs:** Write straightforward points.
+
+---
+**User Request:**
+${query}
 `;
 
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.3-70b-versatile",
+    });
+
+    const text = chatCompletion.choices[0]?.message?.content || "";
 
     res.json({
       reply: text,
     });
 
   } catch (error) {
-    console.error("❌ GEMINI ERROR:", error.message);
+    console.error("❌ GROQ ERROR:", error.message);
     res.status(500).json({
-      reply: "❌ Server error (Gemini). Please try again later.",
+      reply: "❌ Server error (Groq). Please try again later.",
     });
   }
 });
