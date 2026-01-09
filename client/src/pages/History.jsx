@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 export default function History({ t }) {
+    const navigate = useNavigate();
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -39,6 +41,11 @@ export default function History({ t }) {
         localStorage.setItem("searchHistory", JSON.stringify([...updatedHistory].reverse()));
     };
 
+    const clearHistory = () => {
+        setHistory([]);
+        localStorage.removeItem("searchHistory");
+    };
+
     return (
         <div className="panel" style={{ maxWidth: '1000px', margin: '0 auto', background: 'rgba(255,255,255,0.02)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -72,16 +79,20 @@ export default function History({ t }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
+                            onClick={() => navigate('/dashboard', { state: { restore: item } })}
                             style={{
                                 background: 'rgba(0,0,0,0.3)',
                                 border: '1px solid var(--glass-border)',
                                 borderRadius: '16px',
                                 padding: '1.5rem',
-                                position: 'relative' // For absolute positioning of delete button
+                                position: 'relative',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s, background 0.2s'
                             }}
+                            whileHover={{ scale: 1.01, background: 'rgba(0,0,0,0.4)' }}
                         >
                             <button
-                                onClick={() => deleteItem(index)}
+                                onClick={(e) => { e.stopPropagation(); deleteItem(index); }}
                                 title="Delete this item"
                                 style={{
                                     position: 'absolute',
@@ -93,6 +104,7 @@ export default function History({ t }) {
                                     fontSize: '1.2rem',
                                     cursor: 'pointer',
                                     opacity: 0.7,
+                                    zIndex: 10,
                                     transition: 'opacity 0.2s'
                                 }}
                                 onMouseEnter={(e) => e.target.style.opacity = '1'}
