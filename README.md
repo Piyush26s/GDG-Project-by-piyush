@@ -1,5 +1,7 @@
 # AI Sarkar Sahayak - Government Scheme Finder MVP
 
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg)](YOUR_LIVE_LINK_HERE)
+
 A working MVP for discovering government schemes using a conversational AI interface. Built for Hackathons.
 
 ## 🚀 Features
